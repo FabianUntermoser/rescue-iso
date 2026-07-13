@@ -15,7 +15,7 @@ Copy to Ventoy USB and boot. No boot params needed — `nofirewall` and `cow_spa
 
 - SSH: `ssh root@<ip>` (password set in `.env`)
 - ZeroTier: approve device in web UI, SSH to ZT IP
-- Pi agent: `pi` (OpenRouter auto-configured)
+- Pi agent: `pi` (OpenRouter free auto-configured)
 
 ## Files
 
