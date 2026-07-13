@@ -5,21 +5,11 @@ Custom SystemRescue ISO with SSH + Pi agent + ZeroTier.
 ## Build
 
 ```bash
-./build.sh
-```
-
-## Config
-
-```bash
 cp .env.example .env   # edit values
 ./build.sh             # build ISO
 ```
 
-Copy to Ventoy USB and boot.
-
-## Boot params
-
-Add at boot prompt: `nofirewall cow_spacesize=2G`
+Copy to Ventoy USB and boot. No boot params needed — `nofirewall` and `cow_spacesize=2G` are baked in.
 
 ## Connect
 

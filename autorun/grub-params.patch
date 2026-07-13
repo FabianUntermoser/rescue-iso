@@ -1,0 +1,11 @@
+--- a/boot/grub/grubsrcd.cfg
++++ b/boot/grub/grubsrcd.cfg
+@@ -37,7 +37,7 @@ eval "
+ 
+ menuentry 'Boot SystemRescue using default options' {
+ 	set gfxpayload=keep
+-	linux /sysresccd/boot/x86_64/vmlinuz archisobasedir=sysresccd $archiso_param iomem=relaxed
++	linux /sysresccd/boot/x86_64/vmlinuz archisobasedir=sysresccd $archiso_param iomem=relaxed nofirewall cow_spacesize=2G
+ 	initrd /sysresccd/boot/intel_ucode.img /sysresccd/boot/amd_ucode.img /sysresccd/boot/x86_64/sysresccd.img
+ }
+ 

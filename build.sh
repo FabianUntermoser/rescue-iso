@@ -41,10 +41,11 @@ if command -v xorriso &>/dev/null; then
     chmod +x "$CUSTOMIZE"
   fi
 
-  mkdir -p "$RECIPE/iso_add/autorun"
+  mkdir -p "$RECIPE/iso_add/autorun" "$RECIPE/iso_patch_and_script"
   cp .autorun_built "$RECIPE/iso_add/autorun/autorun0"
   cp .setup_built "$RECIPE/iso_add/autorun/setup.sh"
   chmod +x "$RECIPE/iso_add/autorun/"*
+  cp autorun/grub-params.patch "$RECIPE/iso_patch_and_script/"
 
   "$CUSTOMIZE" --auto --source="$SRC" --dest="$DEST" --recipe-dir="$RECIPE" --work-dir="$WORKDIR" --overwrite
 else
@@ -55,10 +56,11 @@ else
     cd /work
     curl -sL -o /usr/local/bin/sysrescue-customize "https://gitlab.com/systemrescue/systemrescue-sources/-/raw/main/airootfs/usr/share/sysrescue/bin/sysrescue-customize?inline=false"
     chmod +x /usr/local/bin/sysrescue-customize
-    mkdir -p /tmp/recipe/iso_add/autorun
+    mkdir -p /tmp/recipe/iso_add/autorun /tmp/recipe/iso_patch_and_script
     cp /work/.autorun_built /tmp/recipe/iso_add/autorun/autorun0
     cp /work/.setup_built /tmp/recipe/iso_add/autorun/setup.sh
     chmod +x /tmp/recipe/iso_add/autorun/*
+    cp /work/autorun/grub-params.patch /tmp/recipe/iso_patch_and_script/
     sysrescue-customize --auto --source=/work/'"$SRC"' --dest=/work/'"$DEST"' --recipe-dir=/tmp/recipe --work-dir=/tmp/work --overwrite
   '
 fi
