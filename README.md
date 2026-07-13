@@ -10,7 +10,12 @@ Custom SystemRescue ISO with SSH + Pi agent + ZeroTier.
 
 ## Config
 
-Edit `.env` → `./build.sh` → copy ISO to Ventoy USB.
+```bash
+cp .env.example .env   # edit values
+./build.sh             # build ISO
+```
+
+Copy to Ventoy USB and boot.
 
 ## Boot params
 
@@ -26,7 +31,8 @@ Add at boot prompt: `nofirewall cow_spacesize=2G`
 
 | File | Purpose |
 |------|---------|
-| `.env` | API key + ZeroTier network ID |
+| `.env.example` | Template — copy to `.env` and fill in |
+| `.env` | API key + ZeroTier network ID (gitignored) |
 | `autorun/autorun0` | Auto-config script |
 | `build.sh` | Build ISO |
 | `test-qemu.sh` | Test in QEMU |
