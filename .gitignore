@@ -1,2 +1,4 @@
 *.iso
 .env
+.autorun_built
+.setup_built

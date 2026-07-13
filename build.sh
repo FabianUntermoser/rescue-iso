@@ -13,13 +13,16 @@ if [ -f .env ]; then
   source .env
 fi
 
-# Build autorun with injected config
-AUTORUN_SRC="autorun/autorun0"
-AUTORUN_TMP="$(pwd)/.autorun_built"
-sed \
-  -e "s|__OPENROUTER_API_KEY__|${OPENROUTER_API_KEY:-}|g" \
-  -e "s|__ZEROTIER_NETWORK_ID__|${ZEROTIER_NETWORK_ID:-}|g" \
-  "$AUTORUN_SRC" > "$AUTORUN_TMP"
+# Inject placeholders into autorun scripts
+inject() {
+  sed \
+    -e "s|__OPENROUTER_API_KEY__|${OPENROUTER_API_KEY:-}|g" \
+    -e "s|__ZEROTIER_NETWORK_ID__|${ZEROTIER_NETWORK_ID:-}|g" \
+    -e "s|__ROOT_PASSWORD__|${ROOT_PASSWORD:-rescue123}|g"
+}
+
+inject < autorun/autorun0 > .autorun_built
+inject < autorun/setup.sh > .setup_built
 
 if command -v xorriso &>/dev/null; then
   # Local build
@@ -33,8 +36,9 @@ if command -v xorriso &>/dev/null; then
   fi
 
   mkdir -p "$RECIPE/iso_add/autorun"
-  cp "$AUTORUN_TMP" "$RECIPE/iso_add/autorun/autorun0"
-  chmod +x "$RECIPE/iso_add/autorun/autorun0"
+  cp .autorun_built "$RECIPE/iso_add/autorun/autorun0"
+  cp .setup_built "$RECIPE/iso_add/autorun/setup.sh"
+  chmod +x "$RECIPE/iso_add/autorun/"*
 
   "$CUSTOMIZE" --auto --source="$SRC" --dest="$DEST" --recipe-dir="$RECIPE" --work-dir="$WORKDIR" --overwrite
 else
@@ -47,12 +51,13 @@ else
     chmod +x /usr/local/bin/sysrescue-customize
     mkdir -p /tmp/recipe/iso_add/autorun
     cp /work/.autorun_built /tmp/recipe/iso_add/autorun/autorun0
-    chmod +x /tmp/recipe/iso_add/autorun/autorun0
+    cp /work/.setup_built /tmp/recipe/iso_add/autorun/setup.sh
+    chmod +x /tmp/recipe/iso_add/autorun/*
     sysrescue-customize --auto --source=/work/'"$SRC"' --dest=/work/'"$DEST"' --recipe-dir=/tmp/recipe --work-dir=/tmp/work --overwrite
   '
 fi
 
-rm -f "$AUTORUN_TMP"
+rm -f .autorun_built .setup_built
 rm -rf recipe work 2>/dev/null || true
 
 echo "=== Done: $DEST ==="
