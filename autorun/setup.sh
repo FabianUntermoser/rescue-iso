@@ -19,7 +19,7 @@ if [ -n "$KEY" ]; then
   cat > /root/.pi/agent/config.json <<EOF
 {
   "provider": "openrouter",
-  "model": "openrouter/anthropic/claude-sonnet-4",
+  "model": "openrouter/free",
   "OPENROUTER_API_KEY": "$KEY"
 }
 EOF

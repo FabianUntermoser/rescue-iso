@@ -1,0 +1,10 @@
+#!/bin/bash
+# Idempotent: add nofirewall + cow_spacesize to default GRUB entry
+# Only patches if not already present
+FILE="/tmp/work/boot/grub/grubsrcd.cfg"
+if grep -q "nofirewall" "$FILE" 2>/dev/null; then
+  echo "Params already present, skipping"
+  exit 0
+fi
+sed -i 's/iomem=relaxed$/iomem=relaxed nofirewall cow_spacesize=2G/' "$FILE"
+echo "Patched grubsrcd.cfg"
