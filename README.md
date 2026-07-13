@@ -5,8 +5,7 @@ Custom SystemRescue ISO with SSH + Pi agent + ZeroTier.
 ## Build
 
 ```bash
-./build.sh                    # uses Docker
-# or: sudo pacman -S xorriso squashfs-tools && ./build.sh
+./build.sh
 ```
 
 ## Config
