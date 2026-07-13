@@ -23,7 +23,7 @@ Add at boot prompt: `nofirewall cow_spacesize=2G`
 
 ## Connect
 
-- SSH: `ssh root@<ip>` pw `rescue123`
+- SSH: `ssh root@<ip>` (password set in `.env`)
 - ZeroTier: approve device in web UI, SSH to ZT IP
 - Pi agent: `pi` (OpenRouter auto-configured)
 
