@@ -14,15 +14,21 @@ if [ -f .env ]; then
 fi
 
 # Inject placeholders into autorun scripts
+# Auto-discovers all __PLACEHOLDER__ patterns, replaces from .env
 inject() {
-  sed \
-    -e "s|__OPENROUTER_API_KEY__|${OPENROUTER_API_KEY:-}|g" \
-    -e "s|__ZEROTIER_NETWORK_ID__|${ZEROTIER_NETWORK_ID:-}|g" \
-    -e "s|__ROOT_PASSWORD__|${ROOT_PASSWORD:-rescue123}|g"
+  local script="$1"
+  local out="$2"
+  cp "$script" "$out"
+  for var in $(grep -o '__[A-Z_]*__' "$script" | sort -u); do
+    name=${var#__}
+    name=${name%__}
+    val="${!name:-}"
+    sed -i "s|$var|$val|g" "$out"
+  done
 }
 
-inject < autorun/autorun0 > .autorun_built
-inject < autorun/setup.sh > .setup_built
+inject autorun/autorun0 .autorun_built
+inject autorun/setup.sh .setup_built
 
 if command -v xorriso &>/dev/null; then
   # Local build
