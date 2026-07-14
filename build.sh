@@ -8,6 +8,12 @@ set -e
 SRC="${1:-systemrescue-13.01-amd64.iso}"
 DEST="${2:-systemrescue-custom-amd64.iso}"
 
+# Auto-download stock ISO if missing or truncated
+if [ ! -f "$SRC" ] || [ "$(stat -c%s "$SRC" 2>/dev/null)" -lt 100000000 ]; then
+  echo "Downloading SystemRescue 13.01..."
+  curl -L -o "$SRC" 'https://fastly-cdn.system-rescue.org/releases/13.01/systemrescue-13.01-amd64.iso'
+fi
+
 # Load config
 if [ -f .env ]; then
   source .env
@@ -45,7 +51,7 @@ if command -v xorriso &>/dev/null; then
   cp .autorun_built "$RECIPE/iso_add/autorun/autorun0"
   cp .setup_built "$RECIPE/iso_add/autorun/setup.sh"
   chmod +x "$RECIPE/iso_add/autorun/"*
-  cp autorun/grub-params.sh "$RECIPE/iso_patch_and_script/"
+  cp autorun/grub-params "$RECIPE/iso_patch_and_script/"
   chmod +x "$RECIPE/iso_patch_and_script/"*
 
   "$CUSTOMIZE" --auto --source="$SRC" --dest="$DEST" --recipe-dir="$RECIPE" --work-dir="$WORKDIR" --overwrite
@@ -61,7 +67,7 @@ else
     cp /work/.autorun_built /tmp/recipe/iso_add/autorun/autorun0
     cp /work/.setup_built /tmp/recipe/iso_add/autorun/setup.sh
     chmod +x /tmp/recipe/iso_add/autorun/*
-    cp /work/autorun/grub-params.sh /tmp/recipe/iso_patch_and_script/
+    cp /work/autorun/grub-params /tmp/recipe/iso_patch_and_script/
     chmod +x /tmp/recipe/iso_patch_and_script/*
     sysrescue-customize --auto --source=/work/'"$SRC"' --dest=/work/'"$DEST"' --recipe-dir=/tmp/recipe --work-dir=/tmp/work --overwrite
   '
